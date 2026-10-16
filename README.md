@@ -57,7 +57,7 @@ npm test            # smoke test with mocked adb, no phone needed
 
 Let Grok Bot control your phone from its own cloud computer:
 
-1. Install [Tailscale](https://tailscale.com/) on your phone and on Grok Bot's computer, signed in to the same account. Check that each can see the other's `100.x.x.x` address.
+1. Install [Tailscale](https://tailscale.com/) on your phone and sign in. Ask Grok Bot to install Tailscale on its computer and join the same account (you approve the login). Check that each can see the other's `100.x.x.x` address.
 2. Android only allows wireless-debugging pairing from the same local Wi-Fi, so do a one-time USB setup from any PC:
    ```bash
    adb devices          # accept the prompt on the phone
@@ -69,7 +69,7 @@ Let Grok Bot control your phone from its own cloud computer:
    adb connect <phone-tailscale-ip>:5555
    ```
    and then starts this MCP server with `ADB_SERIAL=<phone-tailscale-ip>:5555`.
-4. Restarting the phone turns TCP mode off, so repeat step 2 after a reboot.
+4. Keep the phone awake on Wi-Fi or mobile data with Tailscale connected. Restarting the phone turns TCP mode off, so repeat step 2 after a reboot.
 
 When you're finished, turn off USB/Wireless debugging and disconnect Tailscale on the phone.
 
@@ -147,7 +147,7 @@ ADB can start, answer and hang up calls on your phone, but Android won't let any
 
 ### Rules and safety
 - Calls come from the Twilio number, not your SIM.
-- Many countries, including the UK, US and EU, require you to tell people they're talking to an AI or being recorded. Grok Bot announces this at the start of each call.
+- Many countries, including the UK, US and EU, require you to tell people they're talking to an AI or being recorded. The voice bridge will announce this at the start of each call.
 - Don't use it for spam, robocalls or impersonation. That breaks Twilio's terms and the law.
 - Set a spending limit in the Twilio Console.
 
