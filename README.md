@@ -123,6 +123,34 @@ Restart the client after you edit the config. On Windows, use `C:\\path\\to\\dis
 
 Every tool except `list_devices`/`connect_wifi` takes an optional `serial`.
 
+## Optional: AI voice calls with Twilio (planned)
+
+> **Status:** planned add-on, not built yet. This section explains what it is and how to get ready for it.
+
+### What it is
+ADB can start, answer and hang up calls on your phone, but Android won't let any app speak into, or listen to, a live SIM call unless the phone is rooted. To give Grok Bot a real voice on calls, you use [Twilio](https://www.twilio.com/), a cloud phone service. Twilio gives you a phone number, and Grok Bot can make and receive calls on it.
+
+### What you can do with it
+- **Outbound calls:** Grok Bot rings a number and speaks for you, for example to book an appointment or check opening hours.
+- **Inbound calls:** Grok Bot answers your Twilio number like a receptionist, takes messages and sends you a summary.
+- **Two-way conversation:** it speaks with text-to-speech and hears the caller through Twilio Media Streams with live speech-to-text.
+- **Transcripts and summaries** of every call, sent to you in chat.
+- **Call forwarding:** forward your SIM to the Twilio number when you're busy, and Grok Bot picks up.
+
+### Setup
+1. Create a [Twilio account](https://www.twilio.com/try-twilio) and verify your own number.
+2. Buy a voice-capable phone number. It costs roughly £1 to $1.15 a month, and calls are a few pence or cents a minute.
+3. From the Twilio Console, copy your **Account SID** and **Auth Token**.
+4. Give them to Grok Bot as secrets (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_NUMBER`). Never paste them into a public repo.
+5. Grok Bot runs a small voice bridge (a webhook plus a media-stream server) and points your Twilio number's voice webhook at it.
+6. Optionally, set up call forwarding on your phone so missed calls go to the Twilio number.
+
+### Rules and safety
+- Calls come from the Twilio number, not your SIM.
+- Many countries, including the UK, US and EU, require you to tell people they're talking to an AI or being recorded. Grok Bot announces this at the start of each call.
+- Don't use it for spam, robocalls or impersonation. That breaks Twilio's terms and the law.
+- Set a spending limit in the Twilio Console.
+
 ## Safety & risks
 
 **This gives an AI model remote control of your phone.** It could send messages, buy things, change settings, delete data or read anything on screen. Models make mistakes and can be steered by text they see (prompt injection from a web page, email or notification).
