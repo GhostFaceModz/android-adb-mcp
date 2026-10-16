@@ -53,6 +53,26 @@ npm install && npm run build
 npm test            # smoke test with mocked adb, no phone needed
 ```
 
+## Connect to Grok Bot's computer (remote, over Tailscale)
+
+Let Grok Bot control your phone from its own cloud computer:
+
+1. Install [Tailscale](https://tailscale.com/) on your phone and on Grok Bot's computer, signed in to the same account. Check that each can see the other's `100.x.x.x` address.
+2. Android only allows wireless-debugging pairing from the same local Wi-Fi, so do a one-time USB setup from any PC:
+   ```bash
+   adb devices          # accept the prompt on the phone
+   adb tcpip 5555
+   ```
+   Unplug the phone afterwards.
+3. Ask Grok Bot to connect. It runs:
+   ```bash
+   adb connect <phone-tailscale-ip>:5555
+   ```
+   and then starts this MCP server with `ADB_SERIAL=<phone-tailscale-ip>:5555`.
+4. Restarting the phone turns TCP mode off, so repeat step 2 after a reboot.
+
+When you're finished, turn off USB/Wireless debugging and disconnect Tailscale on the phone.
+
 ## MCP client configuration
 
 **Cursor** (`~/.cursor/mcp.json`) / **Claude Desktop** (`claude_desktop_config.json`) / any client using the generic `mcpServers` JSON:
