@@ -1,12 +1,10 @@
-# android-adb-mcp
+# android-adb-mcp: AI phone control and voice calls
 
-A small [Model Context Protocol](https://modelcontextprotocol.io) server that lets an AI assistant (Cursor, Claude Desktop, any MCP client) **see and control an Android phone over ADB**: take screenshots, read the UI tree, tap, swipe, type, press keys and launch apps.
+A small [Model Context Protocol](https://modelcontextprotocol.io) server that lets an AI assistant (Cursor, Claude Desktop, any MCP client) **see and control an Android phone over ADB**: take screenshots, read the UI tree, tap, swipe, type, press keys and launch apps. An optional Twilio add-on (planned) will give the assistant a voice to make and answer calls for you.
 
 It is a thin TypeScript wrapper around the `adb` command-line tool and talks to your client over stdio. Two runtime dependencies: `@modelcontextprotocol/sdk` and `zod`.
 
 > ⚠️ **Read the [Safety](#safety--risks) section before you connect a phone you care about.** An AI with this tool can do anything you could do by tapping on the screen.
-
-> **Status: v0.1, not yet tested on real hardware.** The build passes and a smoke test runs every tool against a mocked `adb`. The real `adb` binary was checked too (version, server start, `devices`), but no phone was attached. Bug reports from real Samsung/Pixel devices are welcome.
 
 *Not affiliated with, endorsed by, or sponsored by Google, Android, or Samsung. "Android" is a trademark of Google LLC.*
 
