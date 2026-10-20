@@ -23,6 +23,8 @@ npx -y @ghostfacemodz/android-use
 
 ## Contents
 - [What it does](#what-it-does)
+- [What you can do with it](#what-you-can-do-with-it)
+- [How much control it has on your phone](#how-much-control-it-has-on-your-phone)
 - [Requirements](#requirements)
 - [Phone setup](#phone-setup)
 - [Add it to your MCP client](#add-it-to-your-mcp-client): [Claude Desktop](#claude-desktop) · [Claude Code](#claude-code) · [Cursor](#cursor) · [Hermes Agent](#hermes-agent) · [Other clients](#other-clients-generic-stdio)
@@ -30,6 +32,7 @@ npx -y @ghostfacemodz/android-use
 - [Tools](#tools)
 - [Safety](#safety)
 - [Connect to Grok Bot's computer (Tailscale + ADB)](#connect-to-grok-bots-computer-tailscale--adb)
+- [Use cases and control in depth (docs/USE-CASES.md)](docs/USE-CASES.md)
 - [Development](#development)
 
 ## What it does
@@ -44,6 +47,97 @@ Example: *"Open YouTube and search for lo-fi beats."*
 4. `tap_element { text: "Search" }`
 5. `type_text { text: "lo-fi beats" }`, then `key_event { key: "enter" }`
 6. `screenshot` to check the result
+
+## What you can do with it
+
+You talk to your AI assistant normally. It works out the steps and uses `android-use` to carry them out on your phone: it looks at the screen (`ui_dump`, `screenshot`), acts (`open_app`, `tap_element`, `tap`, `swipe`, `type_text`, `key_event`) and checks the result before moving on. The phone needs to be unlocked.
+
+The full guide, with step-by-step walkthroughs, more prompts and limits for each use case, is in **[docs/USE-CASES.md](docs/USE-CASES.md)**.
+
+### Hands-free errands
+
+Put on a video or stream, start music, open navigation, or set an alarm or timer while your hands are busy.
+
+*Real example:* the author's assistant, connected to his Galaxy Z Fold5 over Tailscale, opened a YouTube channel's newest video and then its live stream: `open_app` (YouTube) → `tap_element "Search"` → `type_text` (channel name) → `key_event enter` → `tap_element` (the channel) → `tap_element "Videos"` → `tap` (newest thumbnail) → `screenshot` to confirm. For the stream: `key_event back` → `tap_element "Live"` → `tap`.
+
+- *"Play my Discover Weekly playlist on Spotify and turn the volume up a bit."*
+- *"Open Google Maps and start directions to the nearest Tesco."*
+- *"Set a 12-minute timer."*
+
+**Tips:** ask for `list_apps` if you don't know an app's package name. `type_text` is ASCII-only, so searches with accents or emoji won't type. [More detail →](docs/USE-CASES.md#hands-free-errands)
+
+### Repetitive taps
+
+Clear notifications, check for updates, or run the same daily flow, such as collecting a daily reward. Pair it with an AI agent that can run on a schedule (for example a cron job running Claude Code headless) to make it happen every morning.
+
+- *"Pull down the notification shade and tap Clear."* → `swipe` from the top edge → `tap_element "Clear"` → `key_event home`
+- *"Open [game], collect the daily reward, then go home."* → `open_app` → `screenshot` → `tap_element "Collect"` → `key_event home`
+- *"Open Galaxy Store and update everything."*
+
+**Limits:** Google Play is on the sensitive-app list by default (it can make purchases), so use Play's own auto-update instead. Scheduled runs fail if the phone has locked. **Respect each app's terms of service:** many games and apps ban automation and can suspend accounts for it. [More detail →](docs/USE-CASES.md#repetitive-taps)
+
+### Social posting from the phone
+
+Use mobile-only features, such as TikTok's editor or Instagram Stories, without a third-party scheduler, because the assistant drives the real app.
+
+- *"Start a new Instagram Story from my latest photo and stop before sharing so I can check it."*
+- *"Upload my newest video to TikTok with this caption, and leave it on the Post screen."*
+- *"Read me the comments on my latest post."* (`ui_dump` + `swipe`)
+
+**Keep a human in the loop:** have the assistant stop on the final screen and send a `screenshot`, and write or approve captions yourself. Emoji can't be typed. Respect platform rules on automated activity; no bulk liking, following or fake engagement. [More detail →](docs/USE-CASES.md#social-posting-from-the-phone)
+
+### Accessibility
+
+If touchscreens are hard for you, you can control the phone by talking or typing to an AI in plain language, and have it read the screen back using `ui_dump` (on-screen text) and `screenshot` (images and anything unlabelled).
+
+- *"What's on my screen right now?"*
+- *"Turn on dark mode and make the text bigger."*
+- *"Go back"*, *"Scroll down"*, *"Turn the volume down."* (`key_event back`, `swipe`, `key_event volume_down`)
+
+**Be realistic:** this complements Android's built-in tools such as **TalkBack** and **Voice Access**; it doesn't replace them. Those run on the phone, work offline and work on the lock screen. `android-use` needs a computer, a connection, an AI service and an unlocked phone, and it's slower. [More detail →](docs/USE-CASES.md#accessibility)
+
+### Remote help for family
+
+Fix a relative's settings from anywhere over Tailscale plus ADB debugging: turn the ringer back on, enlarge the text, or find a missing app icon. Set `ADB_SERIAL` to their phone so nothing else can be touched.
+
+- *"Mum's phone isn't ringing. Put it back on Sound with the ringtone at about 70%."*
+- *"Make Dad's font one size bigger and turn on bold."*
+
+**Always with their consent.** They grant access by accepting the "Allow USB debugging?" prompt, and they can switch it off at any time by turning off USB/Wireless debugging or disconnecting Tailscale. Leave the sensitive-app guard on. [More detail →](docs/USE-CASES.md#remote-help-for-family)
+
+## How much control it has on your phone
+
+In short: **anything you could do by tapping the unlocked screen, the AI can do too**, within the limits of what ADB allows and the guards below. This is based on the code in [`src/`](src/); the [full breakdown](docs/USE-CASES.md#how-much-control-it-has-on-your-phone) has more detail.
+
+| Can | Can't | Off by default |
+|---|---|---|
+| See the screen (`screenshot`) | Get past the lock screen or bypass your PIN | Raw `shell` tool (`ALLOW_SHELL=1`) |
+| Read the UI as text (`ui_dump`) | Root the phone or gain system privileges | Banking, payment, messaging and password apps (`ALLOW_SENSITIVE=1`) |
+| Tap, long-press, swipe | Read apps' private data (chats, databases, saved logins) | Device allowlist: off until you set `ADB_SERIAL` (recommended) |
+| Type text (printable ASCII only) | Do anything when USB and Wireless debugging are off | |
+| Press keys (home, back, recents, volume, power, enter…) | Type emoji or non-ASCII text | |
+| Open apps, list apps, see the foreground app | Hear or speak on phone calls | |
+
+**What it can't do, in more detail.** It can wake the screen but can't unlock it without your PIN, pattern or password. ADB runs as Android's limited `shell` user, so it can't root the phone or read other apps' private storage; it only sees what's on screen, and screens that apps mark as secure show up black. If USB and Wireless debugging are off, or the phone hasn't authorised your computer, nothing works.
+
+**Safety guards that exist in the code:**
+
+- **Device allowlist: `ADB_SERIAL`** (default: not set, so any connected device). Comma-separated serials; every other device is refused and hidden from `list_devices`. The first entry is used by default.
+- **Sensitive-app guard: on unless `ALLOW_SENSITIVE=1`.** `screenshot`, `ui_dump`, `tap`, `tap_element`, `swipe`, `long_press`, `type_text` and most keys are refused while a sensitive app is in the foreground, and `open_app` won't launch one. Blocked by default: Google Wallet, Samsung Wallet/Pay, PayPal, Venmo, Cash App, Zelle, Coinbase, WhatsApp, Telegram, Signal, Google Messages, Samsung Messages, Messenger and Google Play, plus any package whose name contains `bank`, `wallet`, `pay`, `finance`, `crypto`, `authenticator`, `messag`, `signal`, `keepass`, `bitwarden` or `1password`. Add more with `SENSITIVE_PACKAGES`. Home, back, recents and power always work. It matches package names, so it's a best-effort heuristic: many banking apps need adding by hand.
+- **Raw shell off by default: `ALLOW_SHELL`.** Unless set to `1`, the `shell` tool isn't registered at all. If enabled, it isn't covered by the sensitive-app guard.
+- **Rate limit: `RATE_LIMIT_PER_MIN`** (default `120` calls per rolling minute).
+- **Action log:** every tool call is written to stderr with a timestamp and its arguments; typed text is logged as a length only.
+
+**Revoke access instantly:** on the phone, turn off **Wireless debugging** or **USB debugging** (or unplug). For a full reset, use Developer options → **Revoke USB debugging authorisations**, disconnect Tailscale, or restart the phone (which ends `adb tcpip` sessions).
+
+**Recommended safe setup:**
+
+1. Set `ADB_SERIAL` to just your phone.
+2. Leave `ALLOW_SENSITIVE` and `ALLOW_SHELL` unset.
+3. Add your banking apps to `SENSITIVE_PACKAGES` if their names don't contain a keyword.
+4. Keep a screen lock on, and watch the screen while the agent works.
+5. Ask the assistant to stop before anything public or paid.
+6. Turn off Wireless debugging when you're done.
 
 ## Requirements
 
