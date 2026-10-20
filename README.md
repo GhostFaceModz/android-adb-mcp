@@ -58,7 +58,7 @@ The full guide, with step-by-step walkthroughs, more prompts and limits for each
 
 Put on a video or stream, start music, open navigation, or set an alarm or timer while your hands are busy.
 
-*Real example:* the author's assistant, connected to his Galaxy Z Fold5 over Tailscale, opened a YouTube channel's newest video and then its live stream: `open_app` (YouTube) → `tap_element "Search"` → `type_text` (channel name) → `key_event enter` → `tap_element` (the channel) → `tap_element "Videos"` → `tap` (newest thumbnail) → `screenshot` to confirm. For the stream: `key_event back` → `tap_element "Live"` → `tap`.
+*Real example:* the author's assistant, connected to his Galaxy Z Fold5 over Tailscale and Wireless debugging, put Blooprint's Bunker's newest video on in the YouTube app, then switched to TheBurntPeanut's live stream, all from a chat message while he was away from the phone.
 
 - *"Play my Discover Weekly playlist on Spotify and turn the volume up a bit."*
 - *"Open Google Maps and start directions to the nearest Tesco."*
