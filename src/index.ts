@@ -2,6 +2,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
+import { readFileSync } from "node:fs";
 import { run, log, shQuote, encodeInputText, KEYS, parseUiDump, parseDevices, parseCurrentApp, isSensitive } from "./adb.js";
 
 const ALLOWLIST = (process.env.ADB_SERIAL || "").split(",").map((s) => s.trim()).filter(Boolean);
@@ -38,7 +39,11 @@ async function guard(serial?: string, pkg?: string) {
 const text = (t: string) => ({ content: [{ type: "text" as const, text: t }] });
 const serial = z.string().optional().describe("Device serial (optional; defaults to first ADB_SERIAL entry or the only connected device)");
 
-const server = new McpServer({ name: "android-adb-mcp", version: "0.1.0" });
+const VERSION: string = (() => {
+  try { return JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")).version; } catch { return "0.0.0"; }
+})();
+
+const server = new McpServer({ name: "android-use", title: "android-use", version: VERSION });
 
 function tool<S extends z.ZodRawShape>(name: string, desc: string, shape: S, fn: (a: z.objectOutputType<S, z.ZodTypeAny>) => Promise<any>) {
   server.tool(name, desc, shape, (async (a: any) => {
@@ -133,5 +138,5 @@ if (ALLOW_SHELL) {
   tool("shell", "Run an arbitrary adb shell command (enabled via ALLOW_SHELL=1). Dangerous.", { serial, command: z.string().max(2000) }, async ({ serial, command }) => text(await sh(serial, command)));
 }
 
-log(`starting; allowlist=${ALLOWLIST.join(",") || "(any)"} shell=${ALLOW_SHELL} sensitive=${ALLOW_SENSITIVE} rate=${RATE}/min`);
+log(`android-use v${VERSION} starting; allowlist=${ALLOWLIST.join(",") || "(any)"} shell=${ALLOW_SHELL} sensitive=${ALLOW_SENSITIVE} rate=${RATE}/min`);
 await server.connect(new StdioServerTransport());

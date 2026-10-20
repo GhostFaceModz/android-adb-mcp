@@ -22,6 +22,7 @@ assert.equal(parseCurrentApp("mCurrentFocus=Window{1 u0 com.foo.bar/com.foo.Main
 assert.ok(isSensitive("com.whatsapp") && isSensitive("com.chase.sig.android.bank") && !isSensitive("com.example.app"));
 
 let c = await start();
+assert.equal(c.getServerVersion().name, "android-use", "server display name");
 const names = (await c.listTools()).tools.map((t) => t.name);
 assert.ok(!names.includes("shell"), "shell must be off by default");
 for (const n of ["list_devices","connect_wifi","screenshot","tap","swipe","long_press","type_text","key_event","open_app","list_apps","current_app","ui_dump","tap_element","get_screen_size"]) assert.ok(names.includes(n), n);

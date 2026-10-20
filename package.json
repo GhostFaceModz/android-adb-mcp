@@ -1,28 +1,50 @@
 {
-  "name": "android-adb-mcp",
-  "version": "0.1.0",
-  "description": "MCP server that lets an AI assistant control an Android phone via ADB",
+  "name": "@ghostfacemodz/android-use",
+  "version": "0.2.0",
+  "description": "android-use: MCP server that lets AI agents see and control an Android phone over ADB, with safety guards",
+  "mcpName": "io.github.GhostFaceModz/android-use",
   "license": "MIT",
+  "author": "GhostFaceModz",
   "type": "module",
   "bin": {
-    "android-adb-mcp": "dist/index.js"
+    "android-use": "dist/index.js"
   },
+  "main": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node -e \"require('fs').chmodSync('dist/index.js',0o755)\"",
+    "prepublishOnly": "npm run build",
     "start": "node dist/index.js",
     "test": "npm run build && node test/smoke.mjs"
   },
   "keywords": [
     "mcp",
+    "mcp-server",
+    "model-context-protocol",
     "android",
     "adb",
-    "ai-agent"
+    "ai-agent",
+    "claude",
+    "cursor",
+    "android-use"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GhostFaceModz/android-adb-mcp.git"
+  },
+  "homepage": "https://github.com/GhostFaceModz/android-adb-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/GhostFaceModz/android-adb-mcp/issues"
+  },
   "engines": {
     "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",

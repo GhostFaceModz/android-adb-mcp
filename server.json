@@ -1,0 +1,63 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.GhostFaceModz/android-use",
+  "title": "android-use",
+  "description": "Let AI agents see and control an Android phone over ADB, with safety guards.",
+  "repository": {
+    "url": "https://github.com/GhostFaceModz/android-adb-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://github.com/GhostFaceModz/android-adb-mcp#readme",
+  "version": "0.2.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@ghostfacemodz/android-use",
+      "version": "0.2.0",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "ADB_SERIAL",
+          "description": "Comma-separated allowlist of device serials (from `adb devices`). Recommended.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "ALLOW_SHELL",
+          "description": "Set to 1 to register the raw `shell` tool (off by default).",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "ALLOW_SENSITIVE",
+          "description": "Set to 1 to disable the banking/payments/messaging app guard (off by default).",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "SENSITIVE_PACKAGES",
+          "description": "Extra comma-separated package names to treat as sensitive.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "RATE_LIMIT_PER_MIN",
+          "description": "Maximum tool calls per minute (default 120).",
+          "isRequired": false,
+          "format": "number",
+          "default": "120"
+        },
+        {
+          "name": "ADB_PATH",
+          "description": "Path to the adb binary if it is not on PATH.",
+          "isRequired": false,
+          "format": "filepath"
+        }
+      ]
+    }
+  ]
+}

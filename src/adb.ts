@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 
 export const ADB = process.env.ADB_PATH || "adb";
-export const log = (...a: unknown[]) => console.error(`[android-adb-mcp ${new Date().toISOString()}]`, ...a);
+export const log = (...a: unknown[]) => console.error(`[android-use ${new Date().toISOString()}]`, ...a);
 
 export function run(args: string[], opts: { binary?: boolean; timeoutMs?: number } = {}): Promise<Buffer> {
   return new Promise((resolve, reject) => {
