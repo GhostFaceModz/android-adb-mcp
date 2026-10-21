@@ -1,7 +1,7 @@
 {
   "name": "@ghostfacemodz/android-use",
-  "version": "0.2.0",
-  "description": "android-use: MCP server that lets AI agents see and control an Android phone over ADB, with safety guards",
+  "version": "0.3.0",
+  "description": "android-use: MCP server that lets AI agents see and control an Android phone over ADB, locally (stdio) or as a remote connector (Streamable HTTP), with safety guards",
   "mcpName": "io.github.GhostFaceModz/android-use",
   "license": "MIT",
   "author": "GhostFaceModz",
@@ -12,14 +12,17 @@
   "main": "dist/index.js",
   "files": [
     "dist",
+    "scripts",
+    "docs",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
     "build": "tsc && node -e \"require('fs').chmodSync('dist/index.js',0o755)\"",
-    "prepublishOnly": "npm run build",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test",
     "start": "node dist/index.js",
-    "test": "npm run build && node test/smoke.mjs"
+    "test": "npm run build && node test/smoke.mjs && node test/http.mjs"
   },
   "keywords": [
     "mcp",
@@ -30,7 +33,11 @@
     "ai-agent",
     "claude",
     "cursor",
-    "android-use"
+    "android-use",
+    "remote-mcp",
+    "streamable-http",
+    "mcp-connector",
+    "termux"
   ],
   "repository": {
     "type": "git",

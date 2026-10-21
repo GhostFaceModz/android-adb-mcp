@@ -8,13 +8,13 @@
     "source": "github"
   },
   "websiteUrl": "https://github.com/GhostFaceModz/android-adb-mcp#readme",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "packages": [
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "@ghostfacemodz/android-use",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "runtimeHint": "npx",
       "transport": {
         "type": "stdio"

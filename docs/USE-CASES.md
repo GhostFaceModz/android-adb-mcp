@@ -1,6 +1,6 @@
 # android-use: use cases and how much control it has
 
-This page goes into more detail than the [README](../README.md). The first half shows what people actually use `android-use` for, with the kind of thing you'd say to your AI assistant (Claude, Cursor, Hermes Agent, Grok Bot or any other MCP client) and what `android-use` then does on the phone. The second half explains exactly how much control it has, based on what the code really does.
+This page goes into more detail than the [README](../README.md). The first half shows what people actually use `android-use` for, with the kind of thing you'd say to your AI assistant (Claude, ChatGPT, Cursor, Hermes Agent or any other MCP client) and what `android-use` then does on the phone. The second half explains exactly how much control it has, based on what the code really does.
 
 The tool calls shown are illustrative. Your assistant chooses its own steps, and real runs usually include extra `ui_dump` or `screenshot` calls so it can check where it is.
 
@@ -41,7 +41,7 @@ The tool calls shown are illustrative. Your assistant chooses its own steps, and
 
 **How it helps.** When you're cooking, driving (as a passenger), carrying shopping or working on something at your desk, you can ask your assistant to do the fiddly phone bits: put on a video or live stream, start a playlist, open navigation, or set an alarm or timer.
 
-**A real example.** The author connected his Samsung Galaxy Z Fold5 to his AI assistant over [Tailscale](https://tailscale.com/) (see [Connect to Grok Bot's computer](../README.md#connect-to-grok-bots-computer-tailscale--adb)). He asked it to open a YouTube channel's newest video, and later the same channel's live stream. Roughly, it did this:
+**A real example.** The author connected a phone to an AI assistant over [Tailscale](https://tailscale.com/) (see [Run it on a remote computer](../README.md#run-it-on-a-remote-computer-tailscale--adb)). They asked it to open a YouTube channel's newest video, and later the same channel's live stream. Roughly, it did this:
 
 > *"Open YouTube, go to [channel name] and play their newest video."*
 
