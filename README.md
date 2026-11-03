@@ -4,6 +4,7 @@
 
 [![npm](https://img.shields.io/npm/v/@ghostfacemodz/android-use)](https://www.npmjs.com/package/@ghostfacemodz/android-use)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Android Use MCP server](https://mcprush.com/badge/android-use-mcp/card.svg)](https://mcprush.com/to/android-use-mcp?ref=badge)
 
 `android-use` is a [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server. Any MCP-capable app (Claude Desktop, Claude Code, Cursor, Hermes Agent and others) can use it to take screenshots, read the on-screen UI, tap, swipe, type, press keys and launch apps on a real Android device. Since v0.3 it can also run as a **remote connector**: a private `https://…/mcp` URL you paste into Claude.ai, ChatGPT, Cursor, LibreChat, Open WebUI or LM Studio.
 
